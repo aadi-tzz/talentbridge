@@ -1,35 +1,6 @@
-import Script from 'next/script';
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <head>
-        {/* Other head elements */}
-      </head>
-      <body>
-        {children}
-        {/* Google Analytics Scripts */}
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-E9WDN3N70T"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-E9WDN3N70T', {
-              page_path: window.location.pathname, // This helps track SPA navigation correctly
-            });
-          `}
-        </Script>
-      </body>
-    </html>
-  );
-}
-import type React from "react";
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import Head from "next/head";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -41,8 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Talent Bridge - Connecting Talent with Opportunity",
-  description:
-    "Talent Bridge is a premier job consultancy platform connecting top talent with leading employers.",
+  description: "Talent Bridge is a premier job consultancy platform connecting top talent with leading employers.",
   generator: "v0.dev",
   icons: {
     icon: "/favicon.ico",
@@ -57,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <Head>
+        {/* Structured Data for SEO */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -110,6 +81,22 @@ export default function RootLayout({
             <Toaster />
           </AuthProvider>
         </ThemeProvider>
+
+        {/* Google Analytics */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-E9WDN3N70T"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-E9WDN3N70T', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
       </body>
     </html>
   );

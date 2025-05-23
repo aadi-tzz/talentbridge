@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { ArrowLeft, MapPin, Clock, DollarSign } from "lucide-react"
+import { ArrowLeft, MapPin, Clock, IndianRupee } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { getJobById } from "@/services/job-service"
@@ -20,45 +20,61 @@ export default async function JobDetailsPage({ params }: { params: { id: string 
         <div className="bg-[#D7CBAE] rounded-xl shadow-md p-8 space-y-6">
           {/* Job Header */}
           <div>
-            <h1 className="text-2xl font-bold">{job.job_title}</h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-[#6C5C4C] mt-2">
-              <span className="flex items-center gap-1"><MapPin className="h-4 w-4" /> {job.location || "N/A"}</span>
-              <span className="flex items-center gap-1"><DollarSign className="h-4 w-4" /> {job.salary_min ? `${job.salary_min} - ${job.salary_max}` : "Not specified"}</span>
-              <span className="flex items-center gap-1"><Clock className="h-4 w-4" /> Posted recently</span>
-              <Badge className="bg-[#CAA864] text-white px-2 py-1 capitalize">{job.job_type}</Badge>
-              <Badge className="bg-[#6C5C4C] text-white px-2 py-1 capitalize">{job.experience_level}</Badge>
+            <h1 className="text-2xl font-bold">{job.job_title || "Empty"}</h1>
+            <div className="flex flex-wrap items-center gap-4 text-sm text-[#6C5C4C] mt-4">
+              <span className="flex items-center gap-1">
+                <MapPin className="h-4 w-4" /> {job.location || "Empty"}
+              </span>
+              <span className="flex items-center gap-1">
+                <IndianRupee className="h-4 w-4" /> {job.salary || "Empty"}
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-4 w-4" /> Posted recently
+              </span>
+
+              {/* Job Type */}
+              <div className="flex flex-col items-start">
+                <span className="text-[0.7rem] text-[#3b3028] font-semibold uppercase tracking-wide">
+                  Job Type
+                </span>
+                <Badge className="bg-[#CAA864] text-white px-2 py-1 capitalize">
+                  {job.job_type || "Empty"}
+                </Badge>
+              </div>
+
+              {/* Experience Level */}
+              <div className="flex flex-col items-start">
+                <span className="text-[0.7rem] text-[#3b3028] font-semibold uppercase tracking-wide">
+                  Experience
+                </span>
+                <Badge className="bg-[#6C5C4C] text-white px-2 py-1 capitalize">
+                  {job.experience_level || "Empty"}
+                </Badge>
+              </div>
             </div>
           </div>
 
           {/* Description */}
           <div>
             <h2 className="text-lg font-semibold mb-2">Description</h2>
-            <p className="text-sm leading-relaxed whitespace-pre-wrap">{job.job_description}</p>
+            <p className="text-sm leading-relaxed whitespace-pre-wrap">
+              {job.job_description?.trim() || "Empty"}
+            </p>
           </div>
 
           {/* Requirements */}
-          {job.requirements && (
-            <div>
-              <h2 className="text-lg font-semibold mb-2">Requirements</h2>
+          <div>
+            <h2 className="text-lg font-semibold mb-2">Requirements</h2>
+            {job.requirements?.trim() ? (
               <ul className="list-disc list-inside text-sm space-y-1">
                 {job.requirements.split("\n").map((req, idx) => (
                   <li key={idx}>{req}</li>
                 ))}
               </ul>
-            </div>
-          )}
-
-          {/* Benefits */}
-          {job.benefits && (
-            <div>
-              <h2 className="text-lg font-semibold mb-2">Benefits</h2>
-              <ul className="list-disc list-inside text-sm space-y-1">
-                {job.benefits.split("\n").map((ben, idx) => (
-                  <li key={idx}>{ben}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+            ) : (
+              <p className="text-sm">Empty</p>
+            )}
+          </div>
 
           {/* Apply Button */}
           <div className="pt-4">

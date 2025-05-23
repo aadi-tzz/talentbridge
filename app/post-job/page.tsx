@@ -7,13 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Card,
   CardContent,
   CardDescription,
@@ -29,18 +22,14 @@ export default function PostJobPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     companyName: "",
-    companyWebsite: "",
     companyDescription: "",
     jobTitle: "",
-    jobType: "",
+    job_type: "",           // here use job_type variable
     experienceLevel: "",
     location: "",
-    workArrangement: "",
-    salaryMin: "",
-    salaryMax: "",
+    salary: "",
     jobDescription: "",
     requirements: "",
-    benefits: "",
     contactName: "",
     contactEmail: "talentbridge839@gmail.com",
     contactPhone: "",
@@ -56,11 +45,12 @@ export default function PostJobPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     if (
-      !formData.companyName ||
       !formData.jobTitle ||
       !formData.location ||
-      !formData.contactEmail
+      !formData.contactName ||
+      !formData.contactPhone
     ) {
       toast({
         title: "Error",
@@ -72,6 +62,7 @@ export default function PostJobPage() {
 
     setIsSubmitting(true)
     try {
+      // directly send formData as is, because key is job_type, no need for mapping
       const res = await fetch("/api/post-job", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -81,8 +72,7 @@ export default function PostJobPage() {
 
       toast({
         title: "Job Posted Successfully",
-        description:
-          "Your job has been posted and will be reviewed shortly.",
+        description: "Your job has been posted and will be reviewed shortly.",
       })
       setIsSubmitting(false)
       router.push("/jobs")
@@ -101,19 +91,12 @@ export default function PostJobPage() {
       <section className="w-full py-12 md:py-20 text-center">
         <div className="container px-4 md:px-6">
           <h1
-            className="inline-block text-5xl font-extrabold text-[#766646] px-6 py-3 border-4 border-[#CAA864] rounded-lg
-                       shadow-md
-                       bg-[#f5efe3]"
+            className="inline-block text-5xl font-extrabold text-[#766646] px-6 py-3 border-4 border-[#CAA864] rounded-lg shadow-md bg-[#f5efe3]"
             style={{ boxShadow: "0 4px 8px rgba(202,168,100,0.4)" }}
           >
             Post a Job
           </h1>
-          <p
-            className="max-w-[900px] mx-auto mt-6 text-[#766646] md:text-xl font-semibold 
-                       border-2 border-[#CAA864] rounded-md px-5 py-3
-                       bg-[#f9f6e4]
-                       shadow-sm"
-          >
+          <p className="max-w-[900px] mx-auto mt-6 text-[#766646] md:text-xl font-semibold border-2 border-[#CAA864] rounded-md px-5 py-3 bg-[#f9f6e4] shadow-sm">
             Reach thousands of qualified candidates
           </p>
         </div>
@@ -127,7 +110,7 @@ export default function PostJobPage() {
                 <CardHeader>
                   <CardTitle className="text-[#766646]">Job Details</CardTitle>
                   <CardDescription className="text-[#a78b42]">
-                    Fill out all required fields *
+                    Fields marked with * are required
                   </CardDescription>
                 </CardHeader>
 
@@ -137,33 +120,21 @@ export default function PostJobPage() {
                     <h3 className="text-lg font-semibold">Company Information</h3>
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="companyName">Company Name *</Label>
+                        <Label htmlFor="companyName">Company Name</Label>
                         <Input
                           id="companyName"
                           value={formData.companyName}
-                          onChange={handleInputChange}
-                          required
-                          className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="companyWebsite">Company Website</Label>
-                        <Input
-                          id="companyWebsite"
-                          type="url"
-                          value={formData.companyWebsite}
                           onChange={handleInputChange}
                           className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                         />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="companyDescription">Company Description *</Label>
+                      <Label htmlFor="companyDescription">Company Description</Label>
                       <Textarea
                         id="companyDescription"
                         value={formData.companyDescription}
                         onChange={handleInputChange}
-                        required
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                       />
                     </div>
@@ -172,6 +143,7 @@ export default function PostJobPage() {
                   {/* Job Info */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Job Information</h3>
+
                     <div className="space-y-2">
                       <Label htmlFor="jobTitle">Job Title *</Label>
                       <Input
@@ -182,6 +154,7 @@ export default function PostJobPage() {
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                       />
                     </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="location">Job Location *</Label>
                       <Input
@@ -195,115 +168,51 @@ export default function PostJobPage() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <Label>Job Type *</Label>
-                        <Select
-                          onValueChange={(value) =>
-                            setFormData((prev) => ({ ...prev, jobType: value }))
-                          }
+                        <Label htmlFor="job_type">Department</Label>
+                        <Input
+                          id="job_type"
+                          value={formData.job_type}
+                          onChange={handleInputChange}
                           className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                        >
-                          <SelectTrigger className="bg-[#f9f6e4] border-[#CAA864]">
-                            <SelectValue placeholder="Select job type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="full-time">Full-time</SelectItem>
-                            <SelectItem value="part-time">Part-time</SelectItem>
-                            <SelectItem value="contract">Contract</SelectItem>
-                            <SelectItem value="internship">Internship</SelectItem>
-                            <SelectItem value="temporary">Temporary</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        />
                       </div>
 
                       <div className="space-y-2">
-                        <Label>Experience Level *</Label>
-                        <Select
-                          onValueChange={(value) =>
-                            setFormData((prev) => ({ ...prev, experienceLevel: value }))
-                          }
+                        <Label htmlFor="experienceLevel">Experience Level</Label>
+                        <Input
+                          id="experienceLevel"
+                          value={formData.experienceLevel}
+                          onChange={handleInputChange}
                           className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                        >
-                          <SelectTrigger className="bg-[#f9f6e4] border-[#CAA864]">
-                            <SelectValue placeholder="Select experience level" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="entry">Entry</SelectItem>
-                            <SelectItem value="mid">Mid</SelectItem>
-                            <SelectItem value="senior">Senior</SelectItem>
-                            <SelectItem value="executive">Executive</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label>Work Arrangement *</Label>
-                      <Select
-                        onValueChange={(value) =>
-                          setFormData((prev) => ({ ...prev, workArrangement: value }))
-                        }
+                      <Label htmlFor="salary">Salary (e.g. ₹40,000/month or Negotiable)</Label>
+                      <Input
+                        id="salary"
+                        value={formData.salary}
+                        onChange={handleInputChange}
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                      >
-                        <SelectTrigger className="bg-[#f9f6e4] border-[#CAA864]">
-                          <SelectValue placeholder="Select work arrangement" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="remote">Remote</SelectItem>
-                          <SelectItem value="hybrid">Hybrid</SelectItem>
-                          <SelectItem value="onsite">On-site</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="grid gap-4 sm:grid-cols-2">
-                      <div className="space-y-2">
-                        <Label htmlFor="salaryMin">Minimum Salary</Label>
-                        <Input
-                          id="salaryMin"
-                          type="number"
-                          value={formData.salaryMin}
-                          onChange={handleInputChange}
-                          className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="salaryMax">Maximum Salary</Label>
-                        <Input
-                          id="salaryMax"
-                          type="number"
-                          value={formData.salaryMax}
-                          onChange={handleInputChange}
-                          className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                        />
-                      </div>
+                      />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="jobDescription">Job Description *</Label>
+                      <Label htmlFor="jobDescription">Job Description</Label>
                       <Textarea
                         id="jobDescription"
                         value={formData.jobDescription}
                         onChange={handleInputChange}
-                        required
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="requirements">Requirements</Label>
+                      <Label htmlFor="requirements">Requirements (Qualifications, etc.)</Label>
                       <Textarea
                         id="requirements"
                         value={formData.requirements}
-                        onChange={handleInputChange}
-                        className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="benefits">Benefits</Label>
-                      <Textarea
-                        id="benefits"
-                        value={formData.benefits}
                         onChange={handleInputChange}
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                       />
@@ -326,24 +235,24 @@ export default function PostJobPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="contactEmail">Contact Email *</Label>
+                      <Label htmlFor="contactEmail">Contact Email</Label>
                       <Input
                         id="contactEmail"
                         type="email"
                         value={formData.contactEmail}
                         onChange={handleInputChange}
-                        required
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="contactPhone">Contact Phone</Label>
+                      <Label htmlFor="contactPhone">Contact Phone *</Label>
                       <Input
                         id="contactPhone"
                         type="tel"
                         value={formData.contactPhone}
                         onChange={handleInputChange}
+                        required
                         className="bg-[#f9f6e4] border-[#CAA864] text-[#766646]"
                       />
                     </div>

@@ -12,33 +12,34 @@ export async function POST(req: Request) {
     const formData = await req.formData()
 
     const fullName = formData.get("fullName")
-    const email = formData.get("email")
+    const email = formData.get("email") || ""          // optional, default empty string
     const phone = formData.get("phone")
-    const coverLetter = formData.get("coverLetter")
+    const coverLetter = formData.get("coverLetter") || "" // optional, default empty string
     const jobTitle = formData.get("jobTitle")
-    const resume = formData.get("resume") // File object
+    const resume = formData.get("resume")               // optional file
 
-    if (
-      !fullName ||
-      !email ||
-      !phone ||
-      !coverLetter ||
-      !jobTitle ||
-      !resume
-    ) {
+    // Validate required fields
+    if (!fullName || !phone || !jobTitle) {
       return NextResponse.json(
-        { error: "Missing required fields or resume file." },
+        { error: "Missing required fields: fullName, phone or jobTitle." },
         { status: 400 }
       )
     }
 
-    // Convert resume File to Buffer for attachment
-    const resumeBuffer = Buffer.from(await resume.arrayBuffer())
+    // Prepare attachments array, only add resume if provided
+    const attachments = []
+    if (resume && resume instanceof File) {
+      const resumeBuffer = Buffer.from(await resume.arrayBuffer())
+      attachments.push({
+        filename: resume.name,
+        content: resumeBuffer,
+      })
+    }
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
-      secure: false, // or true if port 465
+      secure: false, // true if port 465
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -54,12 +55,7 @@ Name: ${fullName}
 Email: ${email}
 Phone: ${phone}
 Cover Letter: ${coverLetter}`,
-      attachments: [
-        {
-          filename: (resume as File).name,
-          content: resumeBuffer,
-        },
-      ],
+      attachments,
     }
 
     await transporter.sendMail(mailOptions)

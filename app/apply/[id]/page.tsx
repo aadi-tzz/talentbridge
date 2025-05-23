@@ -61,10 +61,10 @@ export default function ApplyJobPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    if (!formData.fullName || !formData.email || !formData.phone || !resumeFile) {
+    if (!formData.fullName || !formData.phone) {
       toast({
         title: "Error",
-        description: "Please fill all required fields and upload your resume.",
+        description: "Please fill all required fields (Full Name and Phone).",
         variant: "destructive",
       })
       return
@@ -72,10 +72,10 @@ export default function ApplyJobPage() {
 
     const data = new FormData()
     data.append("fullName", formData.fullName)
-    data.append("email", formData.email)
+    if (formData.email) data.append("email", formData.email)  // optional
     data.append("phone", formData.phone)
-    data.append("coverLetter", formData.coverLetter)
-    data.append("resume", resumeFile)
+    if (formData.coverLetter) data.append("coverLetter", formData.coverLetter) // optional
+    if (resumeFile) data.append("resume", resumeFile)  // optional now
     data.append("jobId", id!)
     data.append("jobTitle", jobTitle || "")
 
@@ -128,13 +128,12 @@ export default function ApplyJobPage() {
             </div>
 
             <div>
-              <Label htmlFor="email">Email *</Label>
+              <Label htmlFor="email">Email (optional)</Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                required
                 className="bg-[#EEE6D6] text-[#3b3028] placeholder:text-[#766646]"
                 placeholder="example@mail.com"
               />
@@ -165,13 +164,12 @@ export default function ApplyJobPage() {
             </div>
 
             <div>
-              <Label htmlFor="resume">Resume (PDF, DOC) *</Label>
+              <Label htmlFor="resume">Resume (PDF, DOC) (optional)</Label>
               <Input
                 id="resume"
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleFileChange}
-                required
                 className="bg-[#EEE6D6] text-[#3b3028]"
               />
             </div>

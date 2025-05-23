@@ -11,8 +11,7 @@ interface JobCardProps {
     location?: string;
     type?: string;
     experience?: string;
-    salaryMin?: number;
-    salaryMax?: number;
+    salary?: string;         // ✅ changed from salaryMin/salaryMax
     created_at?: string;
   };
 }
@@ -22,7 +21,7 @@ export function JobCard({ job }: JobCardProps) {
   const jobLocation = job.location || 'Location Not Specified';
   const jobType = job.type || 'Type Not Specified';
   const jobExperience = job.experience || 'Experience Not Specified';
-  const salaryRange = `₹${job.salaryMin || 0} - ₹${job.salaryMax || 0}`;
+  const salary = job.salary || 'Salary Not Disclosed';  // ✅ updated
   const postedTime = job.created_at
     ? formatDistanceToNow(new Date(job.created_at), { addSuffix: true })
     : 'Recently posted';
@@ -47,7 +46,7 @@ export function JobCard({ job }: JobCardProps) {
 
           <div className="text-sm text-gray-600 mt-1 flex items-center gap-2">
             <Briefcase className="w-4 h-4" />
-            <span>{salaryRange}</span>
+            <span>{salary}</span> {/* ✅ updated */}
           </div>
 
           <div className="flex gap-2 mt-2 flex-wrap">

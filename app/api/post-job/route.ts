@@ -12,22 +12,18 @@ export async function POST(request: Request) {
     const formData = await request.json()
 
     const {
-      companyName,
-      companyWebsite,
-      companyDescription,
-      jobTitle,
-      jobType,
-      experienceLevel,
-      location,
-      workArrangement,
-      salaryMin,
-      salaryMax,
-      jobDescription,
-      requirements,
-      benefits,
-      contactName,
-      contactEmail,
-      contactPhone,
+      companyName = "",
+      companyDescription = "",
+      jobTitle = "",
+      job_type = "",            // <-- changed from jobType to job_type
+      experienceLevel = "",
+      location = "",
+      salary = "",
+      jobDescription = "",
+      requirements = "",
+      contactName = "",
+      contactEmail = "",
+      contactPhone = "",
       agreeToTerms,
     } = formData
 
@@ -38,18 +34,15 @@ export async function POST(request: Request) {
       )
     }
 
-    // ✅ Insert only required fields into Supabase
     const { error: insertError } = await supabase.from("jobs").insert([
       {
         job_title: jobTitle,
         location,
-        job_type: jobType,
+        job_type: job_type,          // store job_type properly
         experience_level: experienceLevel,
-        salary_min: salaryMin,
-        salary_max: salaryMax,
+        salary,
         job_description: jobDescription,
         requirements,
-        benefits,
       },
     ])
 
@@ -58,7 +51,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Failed to save job post" }, { status: 500 })
     }
 
-    // ✅ Send full details via email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -68,25 +60,23 @@ export async function POST(request: Request) {
     })
 
     const mailOptions = {
-      from: contactEmail,
+      from: contactEmail || "talentbridge839@gmail.com",
       to: "talentbridge839@gmail.com",
       subject: `New Job Posted: ${jobTitle}`,
       html: `
         <h2>New Job Posting Received</h2>
-        <p><strong>Company:</strong> ${companyName} (${companyWebsite || "N/A"})</p>
+        <p><strong>Company:</strong> ${companyName}</p>
         <p><strong>Description:</strong> ${companyDescription}</p>
         <p><strong>Job Title:</strong> ${jobTitle}</p>
-        <p><strong>Type:</strong> ${jobType}</p>
+        <p><strong>Department:</strong> ${job_type}</p>
         <p><strong>Experience Level:</strong> ${experienceLevel}</p>
         <p><strong>Location:</strong> ${location}</p>
-        <p><strong>Work Arrangement:</strong> ${workArrangement}</p>
-        <p><strong>Salary Range:</strong> ₹${salaryMin} - ₹${salaryMax}</p>
+        <p><strong>Salary:</strong> ${salary}</p>
         <p><strong>Job Description:</strong><br/>${jobDescription}</p>
         <p><strong>Requirements:</strong><br/>${requirements}</p>
-        <p><strong>Benefits:</strong><br/>${benefits || "N/A"}</p>
         <hr />
         <p><strong>Contact:</strong> ${contactName} (${contactEmail})</p>
-        <p><strong>Phone:</strong> ${contactPhone || "N/A"}</p>
+        <p><strong>Phone:</strong> ${contactPhone}</p>
       `,
     }
 

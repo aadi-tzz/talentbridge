@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { MapPin, Clock, DollarSign } from "lucide-react"
+import { MapPin, Clock } from "lucide-react"   // Removed DollarSign import
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -45,7 +45,7 @@ export default function JobListingPreview({
             <span>{location}</span>
           </div>
           <div className="flex items-center text-sm text-palette-mutedBrown">
-            <DollarSign className="mr-1 h-4 w-4" />
+            <span className="mr-1 text-lg font-semibold">₹</span> {/* Rupee symbol instead of DollarSign icon */}
             <span>{salary}</span>
           </div>
           <div className="flex items-center text-sm text-palette-mutedBrown">

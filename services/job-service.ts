@@ -10,7 +10,6 @@ export async function getJobs(page = 1, limit = 10, filters: any = {}) {
   let query = supabase
     .from("jobs")
     .select("*")
-    //.eq("is_active", true)
     .order(
       filters.sort === "salary-high"
         ? "salary_max"
@@ -57,7 +56,6 @@ export async function getJobs(page = 1, limit = 10, filters: any = {}) {
   const { count: totalCount } = await supabase
     .from("jobs")
     .select("*", { count: "exact", head: true })
-    //.eq("is_active", true)
 
   return {
     jobs,
@@ -119,10 +117,12 @@ export async function updateJob(id: string, jobData: any) {
   return data
 }
 
-export async function deleteJob(id: string) {
+export async function deleteJob(ids: string | string[]) {
   const supabase = getSupabaseServerClient()
 
-  const { error } = await supabase.from("jobs").delete().eq("id", id)
+  const idArray = Array.isArray(ids) ? ids : [ids]
+
+  const { error } = await supabase.from("jobs").delete().in("id", idArray)
 
   if (error) {
     console.error("Error deleting job:", error)

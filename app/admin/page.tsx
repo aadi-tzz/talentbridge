@@ -21,7 +21,7 @@ export default function AdminPage() {
       if (!user || user.email !== "talentbridge839@gmail.com") {
         router.replace("/login?redirectedFrom=/admin")
       } else {
-        getJobs()
+        getJobs(1, 1000) // Fetch all jobs up to 1000
           .then((res) => {
             console.log("Jobs response:", res)
             setJobs(res.jobs || [])
@@ -65,8 +65,14 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Admin - Manage Jobs</h1>
+      <div className="flex justify-between items-center mb-6 gap-4">
+        <h1 className="text-2xl font-bold flex-grow">Admin - Manage Jobs</h1>
+
+        {/* New Button to Post Multiple Jobs */}
+        <Button onClick={() => router.push("/multi_job")}>
+          Post Multiple Jobs
+        </Button>
+
         <Button variant="outline" onClick={() => { logout(); router.push("/login") }}>
           Logout
         </Button>
@@ -88,7 +94,7 @@ export default function AdminPage() {
                 <strong>Location:</strong> {job.location || "N/A"}
               </p>
               <p className="text-sm text-gray-600">
-                <strong>Salary:</strong> ₹{job.salary_min} - ₹{job.salary_max}
+                <strong>Salary:</strong> ₹{job.salary}
               </p>
             </div>
           </div>

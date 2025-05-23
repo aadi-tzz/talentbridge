@@ -20,20 +20,10 @@ export default function ContactPage() {
     const form = e.currentTarget as HTMLFormElement
     const formData = new FormData(form)
 
-    const data = {
-      firstName: formData.get("first-name"),
-      lastName: formData.get("last-name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      subject: formData.get("subject"),
-      message: formData.get("message"),
-    }
-
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData,
       })
 
       if (!res.ok) throw new Error("Failed to send email")
@@ -57,9 +47,15 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#f5efe3] text-[#6C5C4C]">
       <section className="w-full py-12 md:py-24 lg:py-32 bg-[#f7f3e9]">
-        <div className="container px-4 md:px-6 text-center space-y-4">
+        <div className="container px-4 md:px-6 text-center space-y-4 max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold sm:text-5xl text-[#766646]">Contact Us</h1>
-          <p className="max-w-[900px] mx-auto text-[#6C5C4C] md:text-xl">Have questions or need assistance? We're here to help.</p>
+          <p className="md:text-xl text-[#6C5C4C]">
+            Looking to send your resume or share multiple job listings at once?  
+            Please use the form below — we’re eager to hear from you!
+          </p>
+          <p className="md:text-lg italic text-[#6C5C4C]/90">
+            Have questions or need assistance? We're here to help.
+          </p>
         </div>
       </section>
 
@@ -82,12 +78,12 @@ export default function ContactPage() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="last-name">Last name</Label>
-                        <Input id="last-name" name="last-name" placeholder="Enter your last name" required />
+                        <Input id="last-name" name="last-name" placeholder="Enter your last name" />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" name="email" type="email" placeholder="Enter your email" required />
+                      <Input id="email" name="email" type="email" placeholder="Enter your email" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">Phone</Label>
@@ -95,11 +91,15 @@ export default function ContactPage() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="subject">Subject</Label>
-                      <Input id="subject" name="subject" placeholder="Enter the subject of your message" required />
+                      <Input id="subject" name="subject" placeholder="Enter the subject of your message" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="message">Message</Label>
                       <Textarea id="message" name="message" placeholder="Enter your message" className="min-h-[150px]" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="attachment">Attachment (optional)</Label>
+                      <Input id="attachment" name="attachment" type="file" accept=".pdf,.doc,.docx,.jpg,.png" />
                     </div>
                   </CardContent>
                   <CardFooter className="px-6 pb-6">

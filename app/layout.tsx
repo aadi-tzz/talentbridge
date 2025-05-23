@@ -1,3 +1,31 @@
+import Script from 'next/script';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        {/* You can optionally put the meta tags and title here */}
+      </head>
+      <body>
+        {children}
+        <Script
+          strategy="afterInteractive" // Loads after hydration, but before idle
+          src={`https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX`}
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-E9WDN3N70T', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
+      </body>
+    </html>
+  );
+}
 import type React from "react";
 import "@/app/globals.css";
 import { Inter } from "next/font/google";

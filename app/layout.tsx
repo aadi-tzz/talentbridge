@@ -29,6 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+    <head>
+      <link rel="icon" href="/favicon.ico" sizes="48x48"/>
+    </head>
       <body className={inter.className}>
         {/* ✅ Everything else remains unchanged */}
         <ThemeProvider

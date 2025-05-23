@@ -4,13 +4,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* You can optionally put the meta tags and title here */}
+        {/* Other head elements */}
       </head>
       <body>
         {children}
+        {/* Google Analytics Scripts */}
         <Script
-          strategy="afterInteractive" // Loads after hydration, but before idle
-          src={`https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX`}
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-E9WDN3N70T"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -18,7 +19,7 @@ export default function RootLayout({ children }) {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-E9WDN3N70T', {
-              page_path: window.location.pathname,
+              page_path: window.location.pathname, // This helps track SPA navigation correctly
             });
           `}
         </Script>

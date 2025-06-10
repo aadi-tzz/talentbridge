@@ -6,7 +6,7 @@ import {
   Award,
   Briefcase,
   Clock,
-  Globe
+  Globe,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
@@ -176,7 +176,7 @@ export default function AboutPage() {
               <img
                 src="/renu.png"
                 alt="Renu Chaudhary"
-                className="h-32 w-32 rounded-full object-cover"
+                className="h-40 w-40 rounded-full object-cover shadow-md ring-2 ring-[#CAA864]"
               />
               <h3 className="text-lg font-bold">Renu Chaudhary</h3>
               <p className="text-sm text-gray-500">MBA (HR)</p>

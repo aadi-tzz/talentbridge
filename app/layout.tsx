@@ -1,8 +1,6 @@
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
 import Script from "next/script";
-// ❌ Remove this line:
-// import Head from "next/head";
 
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
@@ -29,11 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-    <head>
-      <link rel="icon" href="/favicon.ico" sizes="48x48"/>
-    </head>
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+      </head>
       <body className={inter.className}>
-        {/* ✅ Everything else remains unchanged */}
+        {/* ✅ Theme and Auth context */}
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -50,7 +48,15 @@ export default function RootLayout({
           </AuthProvider>
         </ThemeProvider>
 
-        {/* ✅ You can keep Google Analytics scripts as is */}
+        {/* ✅ Google AdSense Script */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6816645647475418"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+
+        {/* ✅ Google Analytics (already present) */}
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-E9WDN3N70T"
